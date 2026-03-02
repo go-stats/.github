@@ -35,29 +35,26 @@ The `api` repo runs several services:
 
 ## Web App
 
-The `web` repo is a Next.js 16 application:
+The `web` repo is a Next.js 16 application (App Router, React 19):
 
-- **Auth** -- JWT sessions, OAuth2 (Google), WebAuthn/passkey registration and login
-- **Leagues** -- create/edit leagues, season management, media gallery, browse and follow
-- **Teams** -- team creation, roster management, team statistics
-- **Games** -- game creation, live stat tracking with sport-specific event logging
-- **Players** -- game-by-game stats, season aggregates, player profiles and search
-- **Real-time** -- WebSocket-driven live scores and stat updates with auto-reconnect
-- **Admin** -- user, league, team, game, and player administration
-- **Discovery** -- trending leagues, players, and teams
+- **NextAuth v5** -- JWT sessions, OAuth2, WebAuthn/passkey, middleware-based route protection
+- **React Query** -- server state with `@go-stats/api` SDK hooks, automatic token refresh on 401
+- **WebSocket client** -- real-time updates with auto-reconnect, heartbeat, and channel subscriptions
+- **Radix UI** -- accessible component primitives (dialog, dropdown, select, tabs, toast, etc.)
+- **Vitest + MSW** -- unit tests with API mocking (80% coverage threshold)
+- **Playwright** -- E2E tests with persistent auth state
 
 ## Mobile App
 
-The `go-stats-app` repo is a React Native/Expo application (iOS and Android):
+The `go-stats-app` repo is a React Native 0.83 / Expo 55 application:
 
-- **Auth** -- JWT sessions, OAuth2 (Google), WebAuthn/passkey, secure token storage
-- **Dashboard** -- personalized feed with liked leagues, teams, and players
-- **Leagues** -- create/edit leagues, season and roster management
-- **Games** -- game creation, live stat tracking with WebSocket real-time updates
-- **Players** -- player profiles, sport-specific stat tracking and editing
-- **Search** -- cross-entity debounced search for leagues, teams, and players
-- **Media** -- image uploads via camera/gallery, video playback
-- **Dark mode** -- automatic theme switching via system preferences
+- **Expo Router** -- file-based navigation with typed routes and deep linking (`gostats://`)
+- **expo-secure-store** -- encrypted token storage, automatic refresh via `@go-stats/api` SDK
+- **react-native-passkey** -- WebAuthn/passkey authentication
+- **React Query** -- server state with `@go-stats/api` SDK hooks
+- **WebSocket client** -- real-time updates with auto-auth and auto-connect
+- **NativeWind** -- Tailwind CSS for React Native with automatic dark mode
+- **EAS Build** -- development, preview, and production profiles for iOS and Android
 
 ## Deployed Environment
 
