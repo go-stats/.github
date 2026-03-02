@@ -1,4 +1,4 @@
-# go-stats
+# Go Stats
 
 A sports statistics platform with a Go API, Next.js web app, React Native mobile app, and shared TypeScript SDK.
 
