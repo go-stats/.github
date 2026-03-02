@@ -33,6 +33,21 @@ The `api` repo runs several services:
 - **Sport workers** -- basketball, football, soccer event processing
 - **Background workers** -- video (FFmpeg), email, SMS, push notifications, aggregate views, stats recalculation
 
+## Deployed Environment
+
+| Provider | Service | What it runs |
+|----------|---------|--------------|
+| [**Cloudflare**](https://dash.cloudflare.com) | DNS | Domain resolution |
+| | CDN | Static web images |
+| | R2 | Uploaded image storage |
+| | Push | Web push notifications |
+| [**Render**](https://dashboard.render.com) | Web Service | API server, WebSocket server |
+| | Background Workers | Basketball, football, soccer, video, email, SMS, push, aggregate-views, stats-recalc |
+| | PostgreSQL | Primary database |
+| | Redis | Event streams, caching, job queues |
+| [**Vercel**](https://vercel.com/indielab/gostats.io) | Hosting | Next.js web app |
+| [**Dash0**](https://app.dash0.com) | Observability | Traces, metrics, logs (OpenTelemetry) |
+
 ## Tooling
 
 - **mise** -- tool version management (all repos)
