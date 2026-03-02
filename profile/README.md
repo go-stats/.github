@@ -33,6 +33,32 @@ The `api` repo runs several services:
 - **Sport workers** -- basketball, football, soccer event processing
 - **Background workers** -- video (FFmpeg), email, SMS, push notifications, aggregate views, stats recalculation
 
+## Web App
+
+The `web` repo is a Next.js 16 application:
+
+- **Auth** -- JWT sessions, OAuth2 (Google), WebAuthn/passkey registration and login
+- **Leagues** -- create/edit leagues, season management, media gallery, browse and follow
+- **Teams** -- team creation, roster management, team statistics
+- **Games** -- game creation, live stat tracking with sport-specific event logging
+- **Players** -- game-by-game stats, season aggregates, player profiles and search
+- **Real-time** -- WebSocket-driven live scores and stat updates with auto-reconnect
+- **Admin** -- user, league, team, game, and player administration
+- **Discovery** -- trending leagues, players, and teams
+
+## Mobile App
+
+The `go-stats-app` repo is a React Native/Expo application (iOS and Android):
+
+- **Auth** -- JWT sessions, OAuth2 (Google), WebAuthn/passkey, secure token storage
+- **Dashboard** -- personalized feed with liked leagues, teams, and players
+- **Leagues** -- create/edit leagues, season and roster management
+- **Games** -- game creation, live stat tracking with WebSocket real-time updates
+- **Players** -- player profiles, sport-specific stat tracking and editing
+- **Search** -- cross-entity debounced search for leagues, teams, and players
+- **Media** -- image uploads via camera/gallery, video playback
+- **Dark mode** -- automatic theme switching via system preferences
+
 ## Deployed Environment
 
 | Provider | Service | What it runs |
