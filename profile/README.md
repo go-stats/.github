@@ -96,5 +96,3 @@ All repos follow a consistent validation order: format check, build, lint, test.
 For a full-stack local setup, start with **api** (database + API), then **typescript-api-wrapper** (build the SDK), then **web** or **go-stats-app**.
 
 Each repository README has detailed setup instructions. This document does not duplicate them.
-
-See [API](API.md) for subscription tiers and webhook infrastructure details.
