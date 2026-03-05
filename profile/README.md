@@ -1,4 +1,5 @@
-![Go Stats((https://imagedelivery.net/d179RqXi7TugFQw_4zpuAg/863102c0-67f3-493c-25da-e789f7484e00/public))](https://imagedelivery.net/d179RqXi7TugFQw_4zpuAg/863102c0-67f3-493c-25da-e789f7484e00/public)
+<img src="https://imagedelivery.net/d179RqXi7TugFQw_4zpuAg/863102c0-67f3-493c-25da-e789f7484e00/public" width="50%" />
+
 
 A sports statistics platform with a Go API, Next.js web app, React Native mobile app, and shared TypeScript SDK.
 
