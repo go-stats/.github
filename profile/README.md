@@ -7,10 +7,11 @@ A sports statistics platform with a Go API, Next.js web app, React Native mobile
 
 | Repo | Description | Stack |
 |------|-------------|-------|
-| [api](https://github.com/go-stats/api) | REST API and multi-service backend (API server, WebSocket server, sport workers, background workers) | Go, PostgreSQL, Redis, Docker |
+| [api](https://github.com/go-stats/api) | REST API and multi-service backend (API server, WebSocket server, sport workers, background workers) | Go, PostgreSQL, Redis, GCP Pub/Sub |
 | [web](https://github.com/go-stats/web) | Web application | Next.js, React, TypeScript, Tailwind CSS |
 | [go-stats-app](https://github.com/go-stats/go-stats-app) | Mobile app (iOS and Android) | React Native, Expo, TypeScript, NativeWind |
 | [typescript-api-wrapper](https://github.com/go-stats/typescript-api-wrapper) | Shared TypeScript SDK (`@go-stats/api`), published to GitHub Packages. Provides API client and React Query hooks. | TypeScript, dual ESM + CJS |
+| [infra](https://github.com/go-stats/infra) | GCP infrastructure as code (Pulumi) | TypeScript, Pulumi, GCP |
 
 ## Architecture
 
@@ -21,9 +22,11 @@ graph LR
     sdk --> api
     api --> pg[(PostgreSQL)]
     api --> redis[(Redis)]
+    api --> pubsub[GCP Pub/Sub]
+    pubsub --> workers
 ```
 
-Both frontends consume the API through the shared SDK, which provides a typed API client and React Query hooks. The API handles HTTP and WebSocket connections and delegates background processing to workers.
+Both frontends consume the API through the shared SDK, which provides a typed API client and React Query hooks. The API handles HTTP and WebSocket connections and publishes jobs to GCP Pub/Sub for asynchronous worker processing.
 
 ## API Services
 
@@ -31,8 +34,8 @@ The `api` repo runs several services:
 
 - **API server** (`:8080`) -- REST endpoints, auth (JWT, WebAuthn/passkey, OAuth2), RBAC
 - **WebSocket server** (`:8081`) -- real-time updates via Redis pub/sub
-- **Sport workers** -- basketball, football, soccer event processing
-- **Background workers** -- video (FFmpeg), email, SMS, push notifications, aggregate views, stats recalculation
+- **Sport workers** -- basketball, football, soccer, seven-on-seven event processing
+- **Background workers** -- video (FFmpeg), email, SMS, push notifications, aggregate views, webhook delivery, usage tracking
 
 ## Web App
 
@@ -57,20 +60,25 @@ The `go-stats-app` repo is a React Native 0.83 / Expo 55 application:
 - **NativeWind** -- Tailwind CSS for React Native with automatic dark mode
 - **EAS Build** -- development, preview, and production profiles for iOS and Android
 
-## Deployed Environment
+## Infrastructure
 
-| Provider | Service | What it runs |
-|----------|---------|--------------|
-| [**Cloudflare**](https://dash.cloudflare.com) | DNS | Domain resolution |
-| | CDN | Static web images |
-| | R2 | Uploaded image storage |
-| | Push | Web push notifications |
-| [**Render**](https://dashboard.render.com) | Web Service | API server, WebSocket server |
-| | Background Workers | Basketball, football, soccer, video, email, SMS, push, aggregate-views, stats-recalc |
-| | PostgreSQL | Primary database |
-| | Redis | Event streams, caching, job queues |
-| [**Vercel**](https://vercel.com/indielab/gostats.io) | Hosting | Next.js web app |
-| [**Dash0**](https://app.dash0.com) | Observability | Traces, metrics, logs (OpenTelemetry) |
+The platform runs on **GCP** (`us-east1`) with **dev** and **prod** environments managed by [Pulumi](https://github.com/go-stats/infra). Dev scales to zero; prod is always-on with HA.
+
+| Layer | Service | Notes |
+|-------|---------|-------|
+| **Compute** | Cloud Run | API, WebSocket, web, and worker services |
+| **Database** | Cloud SQL PostgreSQL 17 | Private networking via VPC |
+| **Cache** | Memorystore Redis 7.2 | BASIC (dev), STANDARD_HA (prod) |
+| **Messaging** | GCP Pub/Sub | Durable worker job queues with dead-letter topics |
+| **Real-time** | Redis Pub/Sub | WebSocket broadcast |
+| **Storage** | Cloudflare R2 | Uploaded files and images |
+| **Security** | Cloud Armor WAF, IAM, Secret Manager | OWASP CRS rules, per-service least-privilege |
+| **Networking** | VPC + Serverless Connector | Private database and cache access |
+| **Registry** | Artifact Registry | Docker images |
+| **DNS/CDN** | Cloudflare | Domain resolution and static assets |
+| **CI/CD** | GitHub Actions | Workload Identity Federation (keyless GCP auth) |
+| **Observability** | Dash0 | OpenTelemetry traces, metrics, logs |
+| **IaC** | Pulumi (TypeScript) | All GCP resources |
 
 ## Tooling
 
